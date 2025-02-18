@@ -1,12 +1,14 @@
 package com.reservaki.reservaki.infrastructure.persistence;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import com.reservaki.reservaki.domain.repository.ReservationRepository;
 import com.reservaki.reservaki.domain.entity.Reservation;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,17 +22,17 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Reservation findById(UUID id) {
         return jpaRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Reservation> findByRestaurantId(Long restaurantId) {
+    public List<Reservation> findByRestaurantId(UUID restaurantId) {
         return jpaRepository.findByRestaurantId(restaurantId);
     }
 
     @Override
-    public List<Reservation> findByRestaurantIdAndDate(Long restaurantId, LocalDateTime date) {
+    public List<Reservation> findByRestaurantIdAndDate(UUID restaurantId, LocalDateTime date) {
         LocalDateTime startOfDay = date.toLocalDate().atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1);
         return jpaRepository.findByRestaurantIdAndReservationDateBetween(
@@ -38,7 +40,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         jpaRepository.deleteById(id);
     }
 }

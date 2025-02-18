@@ -11,6 +11,7 @@ import com.reservaki.reservaki.domain.repository.RestaurantRepository;
 import com.reservaki.reservaki.application.dto.ReservationDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,16 +55,16 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation getReservation(Long id) {
+    public Reservation getReservation(UUID id) {
         return reservationRepository.findById(id);
     }
 
-    public List<Reservation> getRestaurantReservations(Long restaurantId) {
+    public List<Reservation> getRestaurantReservations(UUID restaurantId) {
         return reservationRepository.findByRestaurantId(restaurantId);
     }
 
     @Transactional
-    public Reservation updateReservationStatus(Long id, ReservationStatus status) {
+    public Reservation updateReservationStatus(UUID id, ReservationStatus status) {
         Reservation reservation = reservationRepository.findById(id);
         if (reservation == null) {
             throw new IllegalArgumentException("Reservation not found");
@@ -74,7 +75,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(Long id) {
+    public void cancelReservation(UUID id) {
         Reservation reservation = reservationRepository.findById(id);
         if (reservation == null) {
             throw new IllegalArgumentException("Reservation not found");

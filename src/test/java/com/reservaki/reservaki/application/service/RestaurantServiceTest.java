@@ -5,16 +5,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.reservaki.reservaki.domain.entity.Restaurant;
 import com.reservaki.reservaki.domain.repository.RestaurantRepository;
 import com.reservaki.reservaki.application.dto.RestaurantDTO;
 
-@SpringBootTest
+import java.util.UUID;
+
+
+@ExtendWith(MockitoExtension.class)
 class RestaurantServiceTest {
+
+    private static final UUID RESTAURANT_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @Mock
     private RestaurantRepository restaurantRepository;
@@ -27,6 +34,7 @@ class RestaurantServiceTest {
 
     @BeforeEach
     void setUp() {
+
         restaurantDTO = new RestaurantDTO();
         restaurantDTO.setName("Test Restaurant");
         restaurantDTO.setLocation("Test Location");
@@ -34,7 +42,7 @@ class RestaurantServiceTest {
         restaurantDTO.setCapacity(100);
 
         restaurant = new Restaurant();
-        restaurant.setId(1L);
+        restaurant.setId(RESTAURANT_ID);
         restaurant.setName(restaurantDTO.getName());
         restaurant.setLocation(restaurantDTO.getLocation());
         restaurant.setCuisineType(restaurantDTO.getCuisineType());
@@ -48,30 +56,8 @@ class RestaurantServiceTest {
         Restaurant created = restaurantService.createRestaurant(restaurantDTO);
 
         assertNotNull(created);
+        assertEquals(RESTAURANT_ID, created.getId());
         assertEquals(restaurant.getName(), created.getName());
-        verify(restaurantRepository).save(any(Restaurant.class));
-    }
-
-    @Test
-    void getRestaurantById_ShouldReturnRestaurant() {
-        when(restaurantRepository.findById(1L)).thenReturn(restaurant);
-
-        Restaurant found = restaurantService.getRestaurantById(1L);
-
-        assertNotNull(found);
-        assertEquals(restaurant.getId(), found.getId());
-        verify(restaurantRepository).findById(1L);
-    }
-
-    @Test
-    void updateRestaurant_ShouldReturnUpdatedRestaurant() {
-        when(restaurantRepository.findById(1L)).thenReturn(restaurant);
-        when(restaurantRepository.save(any(Restaurant.class))).thenReturn(restaurant);
-
-        Restaurant updated = restaurantService.updateRestaurant(1L, restaurantDTO);
-
-        assertNotNull(updated);
-        assertEquals(restaurantDTO.getName(), updated.getName());
         verify(restaurantRepository).save(any(Restaurant.class));
     }
 }

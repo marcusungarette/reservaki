@@ -1,6 +1,8 @@
 package com.reservaki.reservaki.application.service;
 
 import java.util.List;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.reservaki.reservaki.domain.entity.Restaurant;
@@ -24,7 +26,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    public Restaurant getRestaurantById(Long id) {
+    public Restaurant getRestaurantById(UUID id) {
         return restaurantRepository.findById(id);
     }
 
@@ -36,7 +38,7 @@ public class RestaurantService {
         return restaurantRepository.findByCuisineType(cuisineType);
     }
 
-    public Restaurant updateRestaurant(Long id, RestaurantDTO dto) {
+    public Restaurant updateRestaurant(UUID id, RestaurantDTO dto) {
         Restaurant existingRestaurant = restaurantRepository.findById(id);
         if (existingRestaurant == null) {
             return null;
@@ -51,7 +53,7 @@ public class RestaurantService {
         return restaurantRepository.save(existingRestaurant);
     }
 
-    public void deleteRestaurant(Long id) {
+    public void deleteRestaurant(UUID id) {
         restaurantRepository.deleteById(id);
     }
 }

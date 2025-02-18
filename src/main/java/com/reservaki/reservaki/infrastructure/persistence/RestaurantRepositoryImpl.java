@@ -7,6 +7,7 @@ import com.reservaki.reservaki.domain.repository.RestaurantRepository;
 import com.reservaki.reservaki.domain.entity.Restaurant;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,12 +21,12 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
     }
 
     @Override
-    public Restaurant findById(Long id) {
+    public Restaurant findById(UUID id) {
         return jpaRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(UUID id) {
         jpaRepository.deleteById(id);
     }
 
