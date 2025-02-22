@@ -3,13 +3,18 @@ package com.reservaki.reservaki.application.service;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.reservaki.reservaki.application.dto.RestaurantDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Arrays;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.eq;
+import com.reservaki.reservaki.domain.entity.ReservationStatus;
 
 import com.reservaki.reservaki.domain.entity.Reservation;
 import com.reservaki.reservaki.domain.entity.Restaurant;
@@ -83,5 +88,96 @@ class ReservationServiceTest {
         assertEquals(reservationDTO.getCustomerName(), created.getCustomerName());
         verify(restaurantRepository).findById(RESTAURANT_ID);
         verify(reservationRepository).save(any(Reservation.class));
+    }
+
+    @Test
+    void createReservation_WhenRestaurantNotFound_ShouldThrowException() {
+        when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            reservationService.createReservation(reservationDTO);
+        });
+
+        verify(restaurantRepository).findById(RESTAURANT_ID);
+        verify(reservationRepository, never()).save(any(Reservation.class));
+    }
+
+    @Test
+    void getReservation_ShouldReturnReservation() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(reservation);
+
+        Reservation found = reservationService.getReservation(RESERVATION_ID);
+
+        assertNotNull(found);
+        assertEquals(RESERVATION_ID, found.getId());
+        assertEquals(reservationDTO.getCustomerName(), found.getCustomerName());
+        verify(reservationRepository).findById(RESERVATION_ID);
+    }
+
+    @Test
+    void getRestaurantReservations_ShouldReturnList() {
+        List<Reservation> reservations = Arrays.asList(reservation);
+        when(reservationRepository.findByRestaurantId(RESTAURANT_ID)).thenReturn(reservations);
+
+        List<Reservation> result = reservationService.getRestaurantReservations(RESTAURANT_ID);
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        assertEquals(RESERVATION_ID, result.get(0).getId());
+        verify(reservationRepository).findByRestaurantId(RESTAURANT_ID);
+    }
+
+    @Test
+    void updateReservationStatus_ShouldUpdateStatus() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(reservation);
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+
+        Reservation updated = reservationService.updateReservationStatus(RESERVATION_ID, ReservationStatus.CONFIRMED);
+
+        assertNotNull(updated);
+        assertEquals(ReservationStatus.CONFIRMED, updated.getStatus());
+        verify(reservationRepository).findById(RESERVATION_ID);
+        verify(reservationRepository).save(any(Reservation.class));
+    }
+
+    @Test
+    void updateReservationStatus_WhenNotFound_ShouldThrowException() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            reservationService.updateReservationStatus(RESERVATION_ID, ReservationStatus.CONFIRMED);
+        });
+
+        verify(reservationRepository).findById(RESERVATION_ID);
+        verify(reservationRepository, never()).save(any(Reservation.class));
+    }
+
+    @Test
+    void cancelReservation_ShouldUpdateStatusToCancelled() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(reservation);
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+
+        reservationService.cancelReservation(RESERVATION_ID);
+
+        assertEquals(ReservationStatus.CANCELLED, reservation.getStatus());
+        verify(reservationRepository).findById(RESERVATION_ID);
+        verify(reservationRepository).save(any(Reservation.class));
+    }
+
+    @Test
+    void createReservation_WhenCapacityExceeded_ShouldThrowException() {
+        when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(restaurant);
+        when(reservationRepository.findByRestaurantIdAndDate(eq(RESTAURANT_ID), any(LocalDateTime.class)))
+                .thenReturn(Arrays.asList(reservation, reservation)); // Simula já ter reservas
+
+        reservationDTO.setPartySize(50); // Tamanho maior que a capacidade
+
+        assertThrows(IllegalStateException.class, () -> {
+            reservationService.createReservation(reservationDTO);
+        });
+
+        verify(restaurantRepository).findById(RESTAURANT_ID);
+        verify(reservationRepository, never()).save(any(Reservation.class));
     }
 }
