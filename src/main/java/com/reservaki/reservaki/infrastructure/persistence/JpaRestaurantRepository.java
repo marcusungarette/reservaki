@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface JpaRestaurantRepository extends JpaRepository<Restaurant, UUID> {
     List<Restaurant> findByCuisineType(String cuisineType);
+    List<Restaurant> findByLocationContainingIgnoreCase(String location);
 }
+

@@ -11,4 +11,5 @@ public interface RestaurantRepository {
     void deleteById(UUID id);
     List<Restaurant> findAll();
     List<Restaurant> findByCuisineType(String cuisineType);
+    List<Restaurant> findByLocationContainingIgnoreCase(String location);
 }

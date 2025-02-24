@@ -38,6 +38,10 @@ public class RestaurantService {
         return restaurantRepository.findByCuisineType(cuisineType);
     }
 
+    public List<Restaurant> getRestaurantsByLocation(String location) {
+        return restaurantRepository.findByLocationContainingIgnoreCase(location);
+    }
+
     public Restaurant updateRestaurant(UUID id, RestaurantDTO dto) {
         Restaurant existingRestaurant = restaurantRepository.findById(id);
         if (existingRestaurant == null) {

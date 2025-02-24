@@ -39,4 +39,9 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
     public List<Restaurant> findByCuisineType(String cuisineType) {
         return jpaRepository.findByCuisineType(cuisineType);
     }
+
+    @Override
+    public List<Restaurant> findByLocationContainingIgnoreCase(String location) {
+        return jpaRepository.findByLocationContainingIgnoreCase(location);
+    }
 }
