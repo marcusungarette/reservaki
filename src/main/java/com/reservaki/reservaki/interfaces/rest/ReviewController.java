@@ -38,4 +38,14 @@ public class ReviewController {
     public ResponseEntity<Double> getRestaurantAverageRating(@PathVariable UUID restaurantId) {
         return ResponseEntity.ok(reviewService.getRestaurantAverageRating(restaurantId));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Review> getReview(@PathVariable UUID id) {
+        Review review = reviewService.findById(id);
+        if (review == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(review);
+    }
+
 }

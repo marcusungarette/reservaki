@@ -44,4 +44,8 @@ public class ReviewService {
     public Double getRestaurantAverageRating(UUID restaurantId) {
         return reviewRepository.getAverageRatingByRestaurantId(restaurantId);
     }
+
+    public Review findById(UUID id) {
+        return reviewRepository.findById(id);
+    }
 }
