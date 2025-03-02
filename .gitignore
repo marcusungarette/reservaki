@@ -23,6 +23,11 @@ target/checkstyle-result.xml
 *.iml
 *.ipr
 
+
+# Gatling test results
+gatling-docker/results/*
+
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

@@ -28,3 +28,12 @@ logging:
     org.flywaydb: DEBUG
     org.hibernate.SQL: DEBUG
     org.springdoc: DEBUG
+
+gatling:
+  image: denvazh/gatling
+  volumes:
+    - ./src/test/java/scala:/opt/gatling/user-files/simulations
+    - ./results:/opt/gatling/results
+  command: -s com.reservaki.reservaki.gatling.LoadTest
+  depends_on:
+    - app
