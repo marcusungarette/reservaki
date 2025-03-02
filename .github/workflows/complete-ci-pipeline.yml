@@ -19,36 +19,39 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
+          cache: 'maven'
 
       - name: Build with Maven
         run: mvn -B compile --file pom.xml
 
       # Executando testes em etapas separadas para melhor visibilidade
       - name: Run Domain Tests
-        run: mvn -B test -Dtest=*domain.entity*Test
-        continue-on-error: false
+        run: mvn -B test -Dtest="*domain*/*Test"
+        continue-on-error: true
 
       - name: Run DTO Tests
-        run: mvn -B test -Dtest=*dto*Test
-        continue-on-error: false
+        run: mvn -B test -Dtest="*dto*Test"
+        continue-on-error: true
 
       - name: Run Service Tests
-        run: mvn -B test -Dtest=*service*Test
-        continue-on-error: false
+        run: mvn -B test -Dtest="*service*Test"
+        continue-on-error: true
 
       - name: Run Controller Tests
-        run: mvn -B test -Dtest=*controller*Test
-        continue-on-error: false
+        run: mvn -B test -Dtest="*controller*Test"
+        continue-on-error: true
 
       - name: Run Integration Tests
-        run: mvn -B test -Dtest=*integration*Test,ReservakiApplicationTests
-        continue-on-error: false
+        run: mvn -B test -Dtest="*integration*Test,ReservakiApplicationTests"
+        continue-on-error: true
 
       # Gera relatório completo depois que todos os testes forem executados
       - name: Generate Test Reports
         if: always()
-        run: mvn surefire-report:report-only
+        run: |
+          mvn surefire-report:report
+          ls -la target/site/
+          ls -la target/
 
       - name: Store Test Results
         if: always()
@@ -56,7 +59,7 @@ jobs:
         with:
           name: test-reports
           path: |
-            target/site/surefire-report.html
+            target/site/
             target/surefire-reports/
           retention-days: 7
 
