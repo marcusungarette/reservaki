@@ -7,8 +7,8 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  unit-tests:
-    name: Unit and Integration Tests
+  test:
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -21,37 +21,12 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build with Maven
-        run: mvn -B compile --file pom.xml
+      - name: Run Tests
+        run: mvn clean test
 
-      # Executando testes em etapas separadas para melhor visibilidade
-      - name: Run Domain Tests
-        run: mvn -B test -Dtest="*domain*/*Test"
-        continue-on-error: true
-
-      - name: Run DTO Tests
-        run: mvn -B test -Dtest="*dto*Test"
-        continue-on-error: true
-
-      - name: Run Service Tests
-        run: mvn -B test -Dtest="*service*Test"
-        continue-on-error: true
-
-      - name: Run Controller Tests
-        run: mvn -B test -Dtest="*controller*Test"
-        continue-on-error: true
-
-      - name: Run Integration Tests
-        run: mvn -B test -Dtest="*integration*Test,ReservakiApplicationTests"
-        continue-on-error: true
-
-      # Gera relatório completo depois que todos os testes forem executados
       - name: Generate Test Reports
         if: always()
-        run: |
-          mvn surefire-report:report
-          ls -la target/site/
-          ls -la target/
+        run: mvn surefire-report:report
 
       - name: Store Test Results
         if: always()
@@ -63,9 +38,9 @@ jobs:
             target/surefire-reports/
           retention-days: 7
 
-  build-and-package:
-    name: Build and Package
-    needs: unit-tests
+  package:
+    name: Package Application
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
@@ -76,9 +51,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
+          cache: 'maven'
 
-      - name: Package Application
+      - name: Build JAR
         run: mvn -B package -DskipTests
 
       - name: Store JAR Artifact
