@@ -145,11 +145,9 @@ class ReservationTest {
                 null
         );
 
-        // Test equals
         assertEquals(reservation1, reservation2);
         assertNotEquals(reservation1, reservation3);
 
-        // Test hashCode
         assertEquals(reservation1.hashCode(), reservation2.hashCode());
         assertNotEquals(reservation1.hashCode(), reservation3.hashCode());
     }

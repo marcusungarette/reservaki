@@ -118,11 +118,9 @@ class ReviewTest {
                 null
         );
 
-        // Test equals
         assertEquals(review1, review2);
         assertNotEquals(review1, review3);
 
-        // Test hashCode
         assertEquals(review1.hashCode(), review2.hashCode());
         assertNotEquals(review1.hashCode(), review3.hashCode());
     }

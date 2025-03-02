@@ -15,10 +15,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseIntegrationTest {
 
-    // Singleton estático para container
     private static PostgreSQLContainer<?> postgres;
 
-    // Método para parar o container no final
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (postgres != null) {
@@ -27,7 +25,6 @@ public abstract class BaseIntegrationTest {
         }));
     }
 
-    // Método sincronizado para garantir uma única instância de container
     protected static synchronized PostgreSQLContainer<?> getPostgresContainer() {
         if (postgres == null) {
             postgres = new PostgreSQLContainer<>("postgres:14-alpine")

@@ -48,14 +48,12 @@ class ReservationServiceTest {
     void setUp() {
         reservationDate = LocalDateTime.now().plusDays(1);
 
-        // Setup Restaurant primeiro
         restaurant = new Restaurant();
-        restaurant.setId(RESTAURANT_ID);  // Importante: setar o ID do restaurante
+        restaurant.setId(RESTAURANT_ID);
         restaurant.setName("Test Restaurant");
         restaurant.setCapacity(48);
         restaurant.setCuisineType("Italian");
 
-        // Setup ReservationDTO
         reservationDTO = new ReservationDTO();
         reservationDTO.setRestaurantId(RESTAURANT_ID);
         reservationDTO.setCustomerName("John Doe");
@@ -64,7 +62,6 @@ class ReservationServiceTest {
         reservationDTO.setReservationDate(reservationDate);
         reservationDTO.setPartySize(4);
 
-        // Setup Reservation por último
         reservation = new Reservation();
         reservation.setId(RESERVATION_ID);
         reservation.setRestaurant(restaurant);
@@ -169,9 +166,9 @@ class ReservationServiceTest {
     void createReservation_WhenCapacityExceeded_ShouldThrowException() {
         when(restaurantRepository.findById(RESTAURANT_ID)).thenReturn(restaurant);
         when(reservationRepository.findByRestaurantIdAndDate(eq(RESTAURANT_ID), any(LocalDateTime.class)))
-                .thenReturn(Arrays.asList(reservation, reservation)); // Simula já ter reservas
+                .thenReturn(Arrays.asList(reservation, reservation));
 
-        reservationDTO.setPartySize(50); // Tamanho maior que a capacidade
+        reservationDTO.setPartySize(50);
 
         assertThrows(IllegalStateException.class, () -> {
             reservationService.createReservation(reservationDTO);

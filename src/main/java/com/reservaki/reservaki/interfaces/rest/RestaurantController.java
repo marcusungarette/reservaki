@@ -69,14 +69,14 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.getRestaurantsByCuisineType(type));
     }
 
-    @GetMapping("/location/{location}")  // Corrigi o mapeamento para usar PathVariable
-    @Operation(summary = "Buscar restaurantes por localização")  // Atualizei o resumo para refletir busca por localização
+    @GetMapping("/location/{location}")
+    @Operation(summary = "Buscar restaurantes por localização")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de restaurantes por localidade recuperada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Nenhum restaurante encontrado para a localidade")
     })
     public ResponseEntity<List<Restaurant>> getRestaurantsByLocation(
-            @Parameter(description = "Localidade do restaurante") @PathVariable String location) {  // Corrigi o nome do parâmetro
+            @Parameter(description = "Localidade do restaurante") @PathVariable String location) {
         List<Restaurant> restaurants = restaurantService.getRestaurantsByLocation(location);
 
         if (restaurants.isEmpty()) {

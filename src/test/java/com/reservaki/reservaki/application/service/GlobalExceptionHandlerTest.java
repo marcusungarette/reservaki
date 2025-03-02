@@ -27,19 +27,19 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void shouldHandleMethodArgumentNotValidException() {
-        // Cria um mock de MethodArgumentNotValidException
+
         MethodArgumentNotValidException mockException = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
 
-        // Configura o mock com um erro de campo
+
         FieldError fieldError = new FieldError("objectName", "fieldName", "Error message");
         when(mockException.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
 
-        // Executa o método de tratamento
+
         ResponseEntity<Map<String, String>> response = globalExceptionHandler.handleValidationExceptions(mockException);
 
-        // Verifica as asserções
+
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().containsKey("fieldName"));
@@ -48,13 +48,13 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void shouldHandleGenericException() {
-        // Cria uma exceção genérica
+
         Exception genericException = new Exception("Unexpected error");
 
-        // Executa o método de tratamento
+
         ResponseEntity<Map<String, String>> response = globalExceptionHandler.handleAllExceptions(genericException);
 
-        // Verifica as asserções
+
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().containsKey("message"));
@@ -63,20 +63,20 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void shouldHandleMultipleFieldErrors() {
-        // Cria um mock de MethodArgumentNotValidException
+
         MethodArgumentNotValidException mockException = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
 
-        // Configura o mock com múltiplos erros de campo
+
         FieldError fieldError1 = new FieldError("objectName", "field1", "Error 1");
         FieldError fieldError2 = new FieldError("objectName", "field2", "Error 2");
         when(mockException.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError1, fieldError2));
 
-        // Executa o método de tratamento
+
         ResponseEntity<Map<String, String>> response = globalExceptionHandler.handleValidationExceptions(mockException);
 
-        // Verifica as asserções
+
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());

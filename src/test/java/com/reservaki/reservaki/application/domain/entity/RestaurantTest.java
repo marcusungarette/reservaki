@@ -67,11 +67,9 @@ class RestaurantTest {
         Restaurant restaurant2 = new Restaurant(id1, "Restaurant1", "Location1", "Cuisine1", "10:00-22:00", 50);
         Restaurant restaurant3 = new Restaurant(UUID.randomUUID(), "Different Restaurant", "Different Location", "Different Cuisine", "11:00-23:00", 100);
 
-        // Test equals
         assertEquals(restaurant1, restaurant2);
         assertNotEquals(restaurant1, restaurant3);
 
-        // Test hashCode
         assertEquals(restaurant1.hashCode(), restaurant2.hashCode());
         assertNotEquals(restaurant1.hashCode(), restaurant3.hashCode());
     }

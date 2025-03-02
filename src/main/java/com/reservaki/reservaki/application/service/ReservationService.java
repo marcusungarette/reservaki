@@ -27,7 +27,7 @@ public class ReservationService {
             throw new IllegalArgumentException("Restaurant not found");
         }
 
-        // Verificar disponibilidade
+
         List<Reservation> existingReservations =
                 reservationRepository.findByRestaurantIdAndDate(
                         dto.getRestaurantId(),

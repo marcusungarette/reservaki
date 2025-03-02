@@ -15,7 +15,6 @@ public class FlywayConfig {
         return args -> {
             log.info("Checking Flyway migration files...");
             try {
-                // Lista todas as migrações disponíveis
                 var migrations = flyway.info().all();
                 log.info("Found {} migration files:", migrations.length);
                 for (var migration : migrations) {
@@ -24,8 +23,6 @@ public class FlywayConfig {
                             migration.getDescription(),
                             migration.getState());
                 }
-
-                // Tenta executar as migrações
                 var result = flyway.migrate();
                 log.info("Successfully applied {} migrations", result.migrationsExecuted);
 

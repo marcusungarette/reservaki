@@ -41,13 +41,13 @@ class ReviewServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Setup Restaurant
+
         restaurant = new Restaurant();
         restaurant.setId(RESTAURANT_ID);
         restaurant.setName("Test Restaurant");
         restaurant.setCuisineType("Italian");
 
-        // Setup ReviewDTO
+
         reviewDTO = new ReviewDTO();
         reviewDTO.setRestaurantId(RESTAURANT_ID);
         reviewDTO.setCustomerName("John Doe");
@@ -55,7 +55,7 @@ class ReviewServiceTest {
         reviewDTO.setRating(5);
         reviewDTO.setComment("Excellent restaurant!");
 
-        // Setup Review
+
         review = new Review();
         review.setId(REVIEW_ID);
         review.setRestaurant(restaurant);

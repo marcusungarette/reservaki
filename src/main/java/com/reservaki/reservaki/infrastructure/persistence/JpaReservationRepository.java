@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface JpaReservationRepository extends JpaRepository<Reservation, UUID> {  // mudado de Long para UUID
+public interface JpaReservationRepository extends JpaRepository<Reservation, UUID> {
     List<Reservation> findByRestaurantId(UUID restaurantId);
     List<Reservation> findByRestaurantIdAndReservationDateBetween(
             UUID restaurantId,
