@@ -1,0 +1,86 @@
+name: Reservaki CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  unit-tests:
+    name: Unit and Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B compile --file pom.xml
+
+      # Executando testes em etapas separadas para melhor visibilidade
+      - name: Run Domain Tests
+        run: mvn -B test -Dtest=*domain.entity*Test
+        continue-on-error: false
+
+      - name: Run DTO Tests
+        run: mvn -B test -Dtest=*dto*Test
+        continue-on-error: false
+
+      - name: Run Service Tests
+        run: mvn -B test -Dtest=*service*Test
+        continue-on-error: false
+
+      - name: Run Controller Tests
+        run: mvn -B test -Dtest=*controller*Test
+        continue-on-error: false
+
+      - name: Run Integration Tests
+        run: mvn -B test -Dtest=*integration*Test,ReservakiApplicationTests
+        continue-on-error: false
+
+      # Gera relatório completo depois que todos os testes forem executados
+      - name: Generate Test Reports
+        if: always()
+        run: mvn surefire-report:report-only
+
+      - name: Store Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: |
+            target/site/surefire-report.html
+            target/surefire-reports/
+          retention-days: 7
+
+  build-and-package:
+    name: Build and Package
+    needs: unit-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Package Application
+        run: mvn -B package -DskipTests
+
+      - name: Store JAR Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
+          retention-days: 7
