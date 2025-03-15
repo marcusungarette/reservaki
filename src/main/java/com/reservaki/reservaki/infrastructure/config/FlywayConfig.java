@@ -2,6 +2,8 @@ package com.reservaki.reservaki.infrastructure.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 public class FlywayConfig {
 
     @Bean
+    @ConditionalOnProperty(name = "spring.flyway.enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnBean(Flyway.class)
     public CommandLineRunner flywayRunner(Flyway flyway) {
         return args -> {
             log.info("Checking Flyway migration files...");
