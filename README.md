@@ -2,6 +2,9 @@
 
 Sistema de Reserva e Avaliação de Restaurantes.
 
+A Spring Boot está com deploy na nuvem em 2 end-points:
+No Render e na AWS EC2 e compartilham o mesmo banco de dados que esta no Render.
+
 
 ## Tecnologias Utilizadas
 
@@ -112,3 +115,4 @@ http://localhost:8080/swagger-ui.html
 ### URL do DEPLOY
 
 **Render** - https://reservaki.onrender.com/swagger-ui/index.html#/
+**AWS EC2** - http://18.212.31.228:8080/swagger-ui/index.html
